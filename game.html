@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Water Weight: Village</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hud-top">
+      <div class="logo">WATER WEIGHT<small>: VILLAGE — charity: water</small></div>
+    </div>
+    <div class="hud-stats">
+      <div class="stat liters"><div class="k" id="hudLiters">0</div><div class="l">Liters</div></div>
+      <div class="stat"><div class="k" id="hudDay">1</div><div class="l">Day</div></div>
+      <div class="stat"><div class="k" id="hudKm">0.0</div><div class="l">Km walked</div></div>
+    </div>
+  </div>
+
+  <!-- MAP -->
+  <div class="card">
+    <h2>🏘️ <span id="cityName">—</span></h2>
+    <canvas id="map" width="384" height="256" aria-label="Top-down view of the village"></canvas>
+    <div class="map-cap">
+      <span id="cityNote">Loading a community in a real water crisis…</span>
+      <span class="pill" id="walkPill">6 km round trip</span>
+    </div>
+    <div class="goal">
+      <div class="lbl"><span>Clean water for the village</span><b id="goalNums">0 / 100 L</b></div>
+      <div class="bar"><i id="goalBar"></i></div>
+    </div>
+  </div>
+
+  <!-- QUEST / NPC -->
+  <div class="card">
+    <div class="npc">
+      <div class="avatar">🧑🏽‍🦱</div>
+      <div class="speech">
+        <div class="who">Maya <span>· charity: water field rep</span></div>
+        <p class="quest-text" id="questText">…</p>
+      </div>
+    </div>
+    <div class="progress">
+      <div class="lbl"><span>Quest progress</span><span id="questNums">0 / 0 L</span></div>
+      <div class="bar"><i id="questBar"></i></div>
+    </div>
+  </div>
+
+  <!-- JOURNEY / PEDOMETER -->
+  <div class="card">
+    <div class="journey-head">
+      <span class="eyebrow">The walk for water</span>
+      <span class="big" id="stepCount">0</span>
+    </div>
+    <div class="leg" id="legLabel">Heading to the water source →</div>
+
+    <div class="route">
+      <div class="track"></div>
+      <div class="home" title="Home">🏠</div>
+      <div class="walker" id="walker" style="left:4px">🚶🏽</div>
+      <div class="well" title="Water source">🌊</div>
+    </div>
+
+    <div class="jerry">
+      <div class="can"><i id="canFill"></i></div>
+      <div class="meta">
+        <b id="tripMeters">0 m</b> of <span id="tripTarget">—</span> this trip ·
+        <span id="tripsDone">0</span> jerry cans delivered
+      </div>
+    </div>
+
+    <div class="hazard" id="hazard">
+      <span style="font-size:20px">⚠️</span>
+      <span class="h-txt" id="hazardText"></span>
+      <button class="h-btn" id="hazardBtn">Treat water</button>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" id="startBtn">Start walking</button>
+      <button class="btn ghost" id="testBtn" style="flex:0 0 46%">Test +20 steps</button>
+    </div>
+    <div class="sensor-note" id="sensorNote">Your phone counts your real steps. On desktop, use “Test +20 steps”.</div>
+
+    <div class="btn-row">
+      <button class="btn ghost" id="scaleBtn">Switch to real distance (6 km)</button>
+    </div>
+  </div>
+
+  <!-- BUILD -->
+  <div class="card">
+    <h2>🛠️ Build the village <span class="eyebrow" style="margin-left:auto">spend liters</span></h2>
+    <div class="builds" id="builds"></div>
+  </div>
+
+  <!-- FACT -->
+  <div class="fact" id="factBox">
+    <span class="dot">💧</span>
+    <span id="factText">Around the world, women and children spend an estimated 200 million hours every day collecting water.</span>
+  </div>
+
+  <div class="reset-row">
+    <button class="reset-btn" id="resetBtn">↺ Reset game</button>
+  </div>
+
+  <div class="foot">
+    Prototype for <b>charity: water</b>. Every liter here is a stand-in for a real walk.
+    <br><a href="https://www.charitywater.org" target="_blank" rel="noopener">charitywater.org →</a>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<canvas id="confetti"></canvas>
+<div class="winwrap" id="winwrap">
+  <div class="wincard">
+    <div class="crown">🏆</div>
+    <h3>The village has clean water!</h3>
+    <p id="winSub">You delivered enough water to restore the community.</p>
+    <div class="big-num" id="winNum">0 L carried home</div>
+    <button class="btn yellow" id="playAgain">Play again</button>
+  </div>
+</div>
+</body>
+</html>
