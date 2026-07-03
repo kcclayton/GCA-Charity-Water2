@@ -41,6 +41,25 @@ const STRIDE = 0.75;       // meters per step
 const BASE_DEMO = 90;      // demo round-trip meters (~120 steps)
 const BASE_REAL = 6000;    // real average round trip (meters)
 
+/* ----- difficulty modes: meaningfully change goal, hazard odds & penalties ----- */
+const DIFFICULTY = {
+  easy:   {label:"Easy",   goal:60,  hazardChance:0.25, spillFrac:0.5,  dropBonus:5, dropLife:7000, dropEvery:[5000, 8000],
+           desc:"Easy: 60 L goal · 25% chance of contaminated water · spills lose half the can · bonus drops linger."},
+  normal: {label:"Normal", goal:100, hazardChance:0.40, spillFrac:0.5,  dropBonus:3, dropLife:5000, dropEvery:[7000, 11000],
+           desc:"Normal: 100 L goal · 40% chance of contaminated water · spills lose half the can."},
+  hard:   {label:"Hard",   goal:150, hazardChance:0.55, spillFrac:0.25, dropBonus:2, dropLife:3200, dropEvery:[9000, 14000],
+           desc:"Hard: 150 L goal · 55% chance of contaminated water · untreated spills lose 3/4 of the can · drops vanish fast."}
+};
+const diff = () => DIFFICULTY[state.difficulty];
+
+/* ----- milestone messages (array + conditionals fire them at key scores) ----- */
+const MILESTONES = [
+  {pct:25, msg:"Milestone: 25% of the village goal — every liter counts! 💧"},
+  {pct:50, msg:"Halfway there! 50% of the clean water goal reached. 🚰"},
+  {pct:75, msg:"75% — the village can almost taste clean water! 🌊"},
+  {pct:90, msg:"90%! Just a few more trips to change this village forever. ✨"}
+];
+
 const state = {
   city:null, day:1,
   collected:0, spent:0,
@@ -51,6 +70,8 @@ const state = {
   goal:100, won:false,
   demoScale:true,
   sensorActive:false,
+  difficulty:"normal",
+  milestonesHit:[],
   buildings:{well:false, tank:false, garden:false, school:false}
 };
 
@@ -76,6 +97,8 @@ function fmtMeters(m){ return m>=1000 ? (m/1000).toFixed(2)+" km" : Math.round(m
 
 /* ---------------- setup ---------------- */
 function init(){
+  applyDifficultyUI();
+  state.goal = diff().goal;
   state.city = CITIES[Math.floor(Math.random()*CITIES.length)];
   $("cityName").textContent = state.city.name;
   $("cityNote").textContent = state.city.note;
@@ -84,6 +107,7 @@ function init(){
   renderBuilds();
   render();
   loopFact();
+  scheduleDrop();
   requestAnimationFrame(drawLoop);
 }
 
@@ -108,15 +132,18 @@ function addSteps(n){
   if(!state.trip.reachedSource && state.trip.meters >= half){
     state.trip.reachedSource = true;
     flash("Reached the water source — filling the jerry can 💧");
+    SFX.collect();
     rollHazard();
   }
   if(state.trip.meters >= target){
     let delivered = JERRY_L;
     if(state.hazard.active && !state.hazard.treated){
-      delivered = JERRY_L/2;
+      delivered = Math.round(JERRY_L * diff().spillFrac);
       flash(`Contaminated water spilled out — only +${delivered} L made it home`, true);
+      SFX.miss();
     }else{
       flash(`+${delivered} L delivered home 🎉`);
+      SFX.deliver();
     }
     state.hazard.active=false; state.hazard.treated=false;
     $("hazard").classList.remove("show");
@@ -124,6 +151,7 @@ function addSteps(n){
     state.trip.reachedSource = false;
     state.trip.trips++;
     state.collected += delivered;
+    checkMilestones();
     checkQuest();
     checkWin();
   }
@@ -133,7 +161,8 @@ function addSteps(n){
 /* ---------------- the twist: contaminated water ---------------- */
 function rollHazard(){
   // a well in the village means closer, safer water -> far fewer hazards
-  const chance = state.buildings.well ? 0.12 : 0.4;
+  // base odds are set by the chosen difficulty mode
+  const chance = diff().hazardChance * (state.buildings.well ? 0.3 : 1);
   if(Math.random() < chance){
     state.hazard.active = true;
     state.hazard.treated = false;
@@ -155,11 +184,24 @@ function checkWin(){
   }
 }
 
+/* milestone messages: walk the MILESTONES array, fire each threshold once */
+function checkMilestones(){
+  const pct = 100 * state.collected / state.goal;
+  MILESTONES.forEach((m, i) => {
+    if(pct >= m.pct && !state.milestonesHit.includes(i) && pct < 100){
+      state.milestonesHit.push(i);
+      flash(m.msg, true);
+      SFX.milestone();
+    }
+  });
+}
+
 function checkQuest(){
   const got = state.collected - state.quest.startCollected;
   if(got >= state.quest.need){
     state.day++;
     flash(`Quest complete! ${state.quest.name} has water. Day ${state.day} begins.`, true);
+    SFX.milestone();
     newQuest();
   }
 }
@@ -233,6 +275,7 @@ function build(key){
   state.spent += b.cost;
   state.buildings[key] = true;
   buildMap();
+  SFX.build();
   if(key==="well"){
     flash("You built a well! The walk for water just got far shorter. ⛲", true);
     state.trip.meters = 0; state.trip.reachedSource = false;
@@ -392,6 +435,7 @@ $("hazardBtn").addEventListener("click", ()=>{
   state.hazard.active = false;
   $("hazard").classList.remove("show");
   flash("Water treated — safe to carry home 💧");
+  SFX.treat();
 });
 
 /* ---------------- win celebration ---------------- */
@@ -402,6 +446,7 @@ function showWin(){
     `Over ${state.day} day${state.day>1?"s":""} of walking, you brought clean water to ${place}.`;
   $("winwrap").classList.add("show");
   fireConfetti();
+  SFX.win();
 }
 
 const conf = $("confetti"), cctx = conf.getContext("2d");
@@ -444,8 +489,10 @@ function resetGame(){
     trip:{meters:0, reachedSource:false, trips:0},
     hazard:{active:false, treated:false},
     won:false, demoScale:true,
+    goal:diff().goal, milestonesHit:[],
     buildings:{well:false, tank:false, garden:false, school:false}
   });
+  clearDrops();
   state.city = CITIES[Math.floor(Math.random()*CITIES.length)];
   $("cityName").textContent = state.city.name;
   $("cityNote").textContent = state.city.note;
@@ -468,6 +515,104 @@ $("scaleBtn").addEventListener("click", ()=>{
     : "Switch to demo scale";
   flash(state.demoScale ? "Demo scale: a trip is ~120 steps." : "Real distance: a trip is the average 6 km walk.", true);
   render();
+});
+
+
+/* ================= sound effects (WebAudio, no files needed) ================= */
+let audioCtx = null, muted = false;
+function ac(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if(audioCtx.state === "suspended") audioCtx.resume();
+  return audioCtx;
+}
+function tone(freq, dur, type="triangle", vol=0.14, when=0){
+  if(muted) return;
+  try{
+    const c = ac();
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, c.currentTime + when);
+    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + when + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(c.currentTime + when);
+    o.stop(c.currentTime + when + dur + 0.05);
+  }catch(e){ /* audio unavailable — fail silently */ }
+}
+const SFX = {
+  collect(){ tone(660,.12); tone(880,.16,"triangle",.12,.08); },                       // filled / picked up a drop
+  deliver(){ tone(523,.12); tone(659,.12,"triangle",.14,.1); tone(784,.2,"triangle",.14,.2); },
+  miss(){ tone(220,.25,"sawtooth",.09); tone(155,.3,"sawtooth",.07,.12); },            // spill / drop evaporated
+  build(){ tone(392,.1,"square",.08); tone(523,.16,"square",.08,.09); },
+  treat(){ tone(700,.1,"sine",.12); tone(940,.14,"sine",.1,.07); },
+  milestone(){ tone(587,.12); tone(784,.18,"triangle",.12,.1); },
+  win(){ [523,659,784,1046].forEach((f,i)=>tone(f,.25,"triangle",.16,i*.15)); tone(1318,.5,"triangle",.13,.6); }
+};
+$("muteBtn").addEventListener("click", ()=>{
+  muted = !muted;
+  const b = $("muteBtn");
+  b.textContent = muted ? "🔇" : "🔊";
+  b.setAttribute("aria-pressed", String(muted));
+  if(!muted) SFX.collect();
+});
+
+/* ============ interactive bonus drops: click one and it pops away ============ */
+let dropTimer = null;
+function scheduleDrop(){
+  clearTimeout(dropTimer);
+  const [a,b] = diff().dropEvery;
+  dropTimer = setTimeout(spawnDrop, a + Math.random()*(b-a));
+}
+function spawnDrop(){
+  if(state.won){ scheduleDrop(); return; }
+  const layer = $("dropLayer");
+  const d = document.createElement("button");
+  d.type = "button";
+  d.className = "drop";
+  d.textContent = "💧";
+  d.setAttribute("aria-label", "Bonus water drop — click to collect");
+  d.style.left = (8 + Math.random()*76) + "%";
+  d.style.top  = (10 + Math.random()*68) + "%";
+  const expire = setTimeout(()=>{
+    d.classList.add("gone");
+    SFX.miss();
+    flash("A bonus drop evaporated… 💨");
+    setTimeout(()=>d.remove(), 300);
+  }, diff().dropLife);
+  d.addEventListener("click", ()=>{
+    clearTimeout(expire);
+    d.classList.add("pop");
+    const bonus = diff().dropBonus;
+    state.collected += bonus;
+    flash(`Bonus +${bonus} L collected! 💧`);
+    SFX.collect();
+    checkMilestones(); checkQuest(); checkWin(); render();
+    setTimeout(()=>d.remove(), 250);
+  }, {once:true});
+  layer.appendChild(d);
+  scheduleDrop();
+}
+function clearDrops(){
+  const layer = $("dropLayer");
+  if(layer) layer.innerHTML = "";
+  scheduleDrop();
+}
+
+/* ==================== difficulty selection ==================== */
+function applyDifficultyUI(){
+  document.querySelectorAll(".diff-btn").forEach(b=>{
+    b.classList.toggle("active", b.dataset.diff === state.difficulty);
+  });
+  $("diffNote").textContent = "goal: " + diff().goal + " L";
+  $("diffDesc").textContent = diff().desc;
+}
+document.querySelectorAll(".diff-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    if(btn.dataset.diff === state.difficulty) return;
+    state.difficulty = btn.dataset.diff;
+    applyDifficultyUI();
+    resetGame();
+    flash(diff().label + " mode — collect " + diff().goal + " L to win!", true);
+  });
 });
 
 init();

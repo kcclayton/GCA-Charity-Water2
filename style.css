@@ -17,7 +17,7 @@
   *{box-sizing:border-box}
   html,body{margin:0}
   body{
-    font-family:"Nunito",system-ui,sans-serif;
+    font-family:"Montserrat",system-ui,sans-serif;
     color:var(--ink);
     background:
       radial-gradient(1200px 500px at 50% -10%, #EAF6FF 0%, rgba(234,246,255,0) 60%),
@@ -36,14 +36,14 @@
     box-shadow:var(--shadow);
   }
   .hud-top{display:flex;align-items:center;gap:10px;}
-  .logo{font-family:"Press Start 2P";font-size:11px;line-height:1.5;letter-spacing:.5px;color:var(--cw-yellow);}
+  .logo{font-family:"Montserrat";font-weight:800;font-size:16px;line-height:1.5;letter-spacing:.5px;color:var(--cw-yellow);}
   .logo small{display:block;color:#fff;opacity:.85;font-size:9px;margin-top:4px;letter-spacing:.5px}
   .hud-stats{display:flex;gap:8px;margin-top:12px;}
   .stat{
     flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
     border-radius:12px;padding:8px 10px;text-align:center;
   }
-  .stat .k{font-family:"Press Start 2P";font-size:13px;line-height:1.2;}
+  .stat .k{font-family:"Montserrat";font-weight:800;font-size:18px;line-height:1.2;}
   .stat .l{font-size:11px;opacity:.8;margin-top:5px;text-transform:uppercase;letter-spacing:.6px}
   .stat.liters .k{color:var(--cw-yellow)}
 
@@ -53,7 +53,7 @@
     border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow);
   }
   .card h2{
-    font-family:"Fredoka";font-weight:600;font-size:15px;margin:0 0 10px;
+    font-family:"Montserrat";font-weight:600;font-size:15px;margin:0 0 10px;
     display:flex;align-items:center;gap:8px;color:var(--ink);
   }
   .eyebrow{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink-soft);font-weight:800}
@@ -87,7 +87,7 @@
 
   /* ---------- journey / pedometer ---------- */
   .journey-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-  .journey-head .big{font-family:"Press Start 2P";font-size:16px;color:var(--water-deep)}
+  .journey-head .big{font-family:"Montserrat";font-weight:800;font-size:20px;color:var(--water-deep)}
   .leg{font-size:12px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.6px}
   .leg.carry{color:var(--cw-yellow-deep)}
   .route{position:relative;height:46px;margin:14px 0 4px}
@@ -104,7 +104,7 @@
   .jerry .meta b{font-size:15px}
 
   .btn{
-    appearance:none;border:0;cursor:pointer;font-family:"Fredoka";font-weight:600;
+    appearance:none;border:0;cursor:pointer;font-family:"Montserrat";font-weight:600;
     font-size:15px;border-radius:12px;padding:13px 16px;width:100%;
     background:var(--water);color:#fff;box-shadow:0 4px 0 var(--water-deep);
     transition:transform .05s ease, box-shadow .05s ease;
@@ -127,9 +127,9 @@
   .build .icon{font-size:24px}
   .build .name{font-weight:800;font-size:13px}
   .build .desc{font-size:11.5px;color:var(--ink-soft);line-height:1.35;flex:1}
-  .build .cost{font-family:"Press Start 2P";font-size:9px;color:var(--water-deep)}
+  .build .cost{font-family:"Montserrat";font-weight:800;font-size:12px;color:var(--water-deep)}
   .build .mini{appearance:none;border:0;cursor:pointer;background:var(--water-deep);color:#fff;
-    font-weight:800;font-family:"Nunito";border-radius:9px;padding:8px;font-size:12px}
+    font-weight:800;font-family:"Montserrat";border-radius:9px;padding:8px;font-size:12px}
   .build .mini:disabled{background:#cfd8de;cursor:not-allowed}
   .build.done{background:#EAF7EA;border-color:#bfe3bf}
   .build.done .mini{background:var(--good)}
@@ -165,13 +165,13 @@
   .hazard.show{display:flex}
   .hazard .h-txt{flex:1;font-size:12.5px;font-weight:700;color:#9A2A1E;line-height:1.35}
   .hazard .h-btn{appearance:none;border:0;cursor:pointer;background:var(--water);color:#fff;font-weight:800;
-    font-family:"Nunito";border-radius:9px;padding:9px 12px;font-size:12px;white-space:nowrap;box-shadow:0 3px 0 var(--water-deep)}
+    font-family:"Montserrat";border-radius:9px;padding:9px 12px;font-size:12px;white-space:nowrap;box-shadow:0 3px 0 var(--water-deep)}
   .hazard .h-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--water-deep)}
 
   /* reset */
   .reset-row{display:flex;justify-content:center;margin-top:4px}
   .reset-btn{appearance:none;border:2px solid var(--line);background:#fff;color:var(--ink-soft);
-    font-weight:800;border-radius:10px;padding:9px 18px;cursor:pointer;font-size:12px;font-family:"Nunito"}
+    font-weight:800;border-radius:10px;padding:9px 18px;cursor:pointer;font-size:12px;font-family:"Montserrat"}
   .reset-btn:hover{border-color:#d8b0aa;color:#9A2A1E}
   .reset-btn:focus-visible{outline:3px solid var(--water-deep);outline-offset:2px}
 
@@ -182,9 +182,9 @@
   .wincard{background:#fff;border-radius:20px;max-width:360px;width:100%;text-align:center;
     padding:26px 22px;box-shadow:var(--shadow);border:3px solid var(--cw-yellow)}
   .wincard .crown{font-size:46px}
-  .wincard h3{font-family:"Fredoka";font-weight:700;font-size:22px;margin:8px 0 6px;color:var(--water-deep)}
+  .wincard h3{font-family:"Montserrat";font-weight:700;font-size:22px;margin:8px 0 6px;color:var(--water-deep)}
   .wincard p{margin:0 0 6px;color:var(--ink-soft);line-height:1.5;font-size:14px}
-  .wincard .big-num{font-family:"Press Start 2P";font-size:15px;color:var(--cw-yellow-deep);margin:14px 0 18px;line-height:1.4}
+  .wincard .big-num{font-family:"Montserrat";font-weight:800;font-size:18px;color:var(--cw-yellow-deep);margin:14px 0 18px;line-height:1.4}
 
   @media (min-width:620px){
     .wrap{max-width:600px}
@@ -192,3 +192,66 @@
   @media (prefers-reduced-motion:reduce){
     *{transition:none !important}
   }
+  /* ---------- mute toggle ---------- */
+  .mute{
+    margin-left:auto;appearance:none;border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.1);border-radius:10px;cursor:pointer;
+    font-size:16px;padding:6px 10px;line-height:1;
+  }
+  .mute:focus-visible{outline:3px solid var(--cw-yellow);outline-offset:2px}
+
+  /* ---------- difficulty selector ---------- */
+  .diff-row{display:flex;gap:8px}
+  .diff-btn{
+    flex:1;appearance:none;cursor:pointer;font-family:"Montserrat";font-weight:700;
+    font-size:14px;padding:11px 0;border-radius:12px;border:2px solid var(--line);
+    background:#fff;color:var(--ink-soft);transition:transform .05s ease;
+  }
+  .diff-btn:active{transform:translateY(2px)}
+  .diff-btn.active{
+    background:var(--cw-yellow);border-color:var(--cw-yellow-deep);
+    color:var(--ink);box-shadow:0 3px 0 var(--cw-yellow-deep);
+  }
+  .diff-btn:focus-visible{outline:3px solid var(--water-deep);outline-offset:2px}
+  .diff-desc{font-size:12px;color:var(--ink-soft);margin-top:10px;line-height:1.45}
+
+  /* ---------- bonus drops over the map ---------- */
+  .map-wrap{position:relative}
+  #dropLayer{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:12px}
+  .drop{
+    position:absolute;pointer-events:auto;appearance:none;border:0;cursor:pointer;
+    background:transparent;font-size:30px;line-height:1;padding:4px;
+    filter:drop-shadow(0 3px 3px rgba(20,61,94,.4));
+    animation:bob 1.2s ease-in-out infinite;
+    transition:transform .2s ease, opacity .2s ease;
+  }
+  .drop:focus-visible{outline:3px solid var(--cw-yellow);outline-offset:2px;border-radius:8px}
+  .drop.pop{transform:scale(1.9);opacity:0}
+  .drop.gone{transform:scale(.3) translateY(10px);opacity:0}
+  @keyframes bob{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-6px)}
+  }
+
+  /* ---------- charity: water footer ---------- */
+  .cw-footer{
+    margin-top:18px;background:var(--water-deep);color:#fff;
+    border-radius:18px;padding:22px 18px;text-align:center;box-shadow:var(--shadow);
+  }
+  .cw-brand{
+    font-family:"Montserrat";font-weight:800;font-size:22px;letter-spacing:-.5px;
+    color:var(--cw-yellow);text-transform:lowercase;
+  }
+  .cw-copy{font-size:13px;line-height:1.6;opacity:.9;max-width:420px;margin:10px auto 16px}
+  .cw-links{display:flex;flex-direction:column;gap:10px;align-items:center}
+  .cw-donate{
+    display:inline-block;background:var(--cw-yellow);color:var(--ink);
+    font-family:"Montserrat";font-weight:800;font-size:16px;text-decoration:none;
+    padding:13px 30px;border-radius:999px;box-shadow:0 4px 0 var(--cw-yellow-deep);
+    transition:transform .05s ease;
+  }
+  .cw-donate:active{transform:translateY(3px);box-shadow:0 1px 0 var(--cw-yellow-deep)}
+  .cw-donate:focus-visible,.cw-site:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:999px}
+  .cw-site{color:#fff;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+  .cw-fine{font-size:11px;opacity:.65;margin-top:16px;line-height:1.5}
+  .cw-fine b{color:var(--cw-yellow)}
