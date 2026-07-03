@@ -289,6 +289,13 @@ function build(key){
 /* ---------------- render ---------------- */
 function render(){
   $("hudLiters").textContent = Math.round(balance());
+
+  // keep "Build the village" buttons in sync with the current liter balance
+  document.querySelectorAll("#builds .mini").forEach(btn=>{
+    const b = BUILDINGS.find(x=>x.key===btn.dataset.key);
+    if(b) btn.disabled = state.buildings[b.key] || balance() < b.cost;
+  });
+
   $("hudDay").textContent = state.day;
   $("hudKm").textContent = (state.distance/1000).toFixed(2);
   $("stepCount").textContent = state.steps;
